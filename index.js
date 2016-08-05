@@ -241,8 +241,12 @@ var run = function(){
 
 module.exports = {
     run : run,
-
-
-
-
+    readBuffer : readBuffer,
+    loadBuffer : loadBuffer,
+    useFrameBuffer : useFrameBuffer,
+    loadTexture : loadTexture,
+    loadVertexArray : loadVertexArray,
+    loadGeometry : loadGeometry,
+    loadContext : loadContext
 }
+
