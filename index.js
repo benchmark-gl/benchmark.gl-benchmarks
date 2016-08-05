@@ -24,7 +24,7 @@ var loadContext = function(render){
 
 }
 
-var loadGeometry = function(){
+var loadGeometry = function(gl){
     var shell = createShell();
 
     var geom, shader;
@@ -248,5 +248,5 @@ module.exports = {
     loadVertexArray : loadVertexArray,
     loadGeometry : loadGeometry,
     loadContext : loadContext
-}
+};
 
