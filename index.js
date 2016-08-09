@@ -1,77 +1,160 @@
-var context = require("./benchmark/context.js");
-var frameBuffer = require("./benchmark/frameBuffer.js");
-var geometry = require("./benchmark/geometry.js");
-var shader = require("./benchmark/shader.js");
-var texture = require("./benchmark/texture.js");
-var vertexArray = require("./benchmark/vertexArray.js");
-var reset = require("gl-reset")
-
-var Benchmark = require("benchmark");
+global.context = require("./benchmark/context.js");
+global.frameBuffer = require("./benchmark/frameBuffer.js");
+global.geometry = require("./benchmark/geometry.js");
+global.shader = require("./benchmark/shader.js");
+global.textureBench = require("./benchmark/texture.js");
+global.vertexArray = require("./benchmark/vertexArray.js");
+global.reset = require("gl-reset")
+global.Benchmark = require("benchmark");
 
 
 module.exports.run = function(cb){
     var suite = new Benchmark.Suite;
-    var canvas = document.body.appendChild(document.createElement("canvas"));
-    var gl = createHeadlessContext(width, height, shader.renderShader);
 
     var results = {
         completed: 0,
-        remaining: 5
+        remaining: 6
     };
 
     // add tests
     suite.add("shader", function() {
-        gl = createContext(canvas, shader.renderShader);
-        var renderOpts = shader.loadShader(gl);
-        gl.tick(renderOpts);
-    })
-    .add("geometry", function() {
-        gl = createContext(canvas, geometry.renderGeometry);
-        var renderOpts = geometry.loadGeometry(gl, canvas.width, canvas.height);
-        gl.tick(renderOpts);
-    })
-    .add("vertexArray", function() {
-        gl = createContext(canvas, vertexArray.renderVertexArray);
-        var renderOpts = vertexArray.loadVertexArray(gl);
-        gl.tick(renderOpts);
-    })
-    .add("texture", function() {
-        gl = createContext(canvas, texture.renderTexture);
-        var renderOpts = texture.loadTexture(gl);
-        gl.tick(renderOpts);
-    })
-    .add("textureSizes", function() {
-        var maxSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);
-        console.log(maxSize);
-
-        gl = createContext(canvas, texture.renderTexture);
-        var renderOpts = texture.loadTexture(gl);
-        gl.tick(renderOpts);
-    })
-    .add("frameBuffer", function() {
-        gl = createContext(canvas, frameBuffer.renderFrameBuffer);
-        var renderOpts = frameBuffer.loadFrameBuffer(gl);
-        gl.tick(renderOpts);
-    })
-    // add listeners
-    .on("cycle", function(event) {
-
-        canvas.remove();
-        var ext = gl.getExtension("STACKGL_destroy_context");
-        ext.destroy();
-
-        canvas = document.body.appendChild(document.createElement("canvas"));
+        var canvas = document.body.appendChild(document.createElement("canvas"));
         canvas.width  = 100;
         canvas.height = 100;
 
+        var gl = createContext(canvas, shader.renderShader);
+        var renderOpts = shader.loadShader(gl);
+        gl.tick(renderOpts);
+
+        canvas.remove();
+        reset(gl);
+        var ext = gl.getExtension("WEBGL_lose_context");
+        ext.loseContext();
+    },
+    {
+        "async": true,
+        "maxTime": 1
+
+    })
+    .add("geometry", function() {
+        var canvas = document.body.appendChild(document.createElement("canvas"));
+        canvas.width  = 100;
+        canvas.height = 100;
+
+        var gl = createContext(canvas, geometry.renderGeometry);
+        var renderOpts = geometry.loadGeometry(gl, canvas.width, canvas.height);
+        gl.tick(renderOpts);
+
+        canvas.remove();
+        reset(gl);
+        var ext = gl.getExtension("WEBGL_lose_context");
+        ext.loseContext();
+    },
+    {
+        "async": true,
+        "maxTime": 1
+
+    })
+    .add("vertexArray", function() {
+        var canvas = document.body.appendChild(document.createElement("canvas"));
+        canvas.width  = 100;
+        canvas.height = 100;
+
+        var gl = createContext(canvas, vertexArray.renderVertexArray);
+        var renderOpts = vertexArray.loadVertexArray(gl);
+        gl.tick(renderOpts);
+
+        canvas.remove();
+        reset(gl);
+        var ext = gl.getExtension("WEBGL_lose_context");
+        ext.loseContext();
+    },
+    {
+        "async": true,
+        "maxTime": 1
+
+    })
+    .add("texture", function() {
+        var canvas = document.body.appendChild(document.createElement("canvas"));
+        canvas.width  = 100;
+        canvas.height = 100;
+
+        var gl = createContext(canvas, textureBench.renderTexture);
+        var renderOpts = textureBench.loadBaboonTexture(gl);
+        gl.tick(renderOpts);
+
+        canvas.remove();
+        reset(gl);
+        var ext = gl.getExtension("WEBGL_lose_context");
+        ext.loseContext();
+    },
+    {
+        "async": true,
+        "maxTime": 1
+
+    })
+    .add("textureSizes", function() {
+        var canvas = document.body.appendChild(document.createElement("canvas"));
+        canvas.width  = 100;
+        canvas.height = 100;
+
+        gl = createContext(canvas, textureBench.renderTexture);
+
+
+        var maxSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);
+        console.log("maxSize", maxSize);
+
+
+        var renderOpts = textureBench.loadTexture(gl);
+        gl.tick(renderOpts);
+
+        canvas.remove();
+        reset(gl);
+        var ext = gl.getExtension("WEBGL_lose_context");
+        ext.loseContext();
+    },
+    {
+        "async": true,
+        "maxTime": 1
+
+    })
+    .add("frameBuffer", function() {
+        var canvas = document.body.appendChild(document.createElement("canvas"));
+        canvas.width  = 100;
+        canvas.height = 100;
+
+        var gl = createContext(canvas, frameBuffer.renderFrameBuffer);
+        var renderOpts = frameBuffer.loadFrameBuffer(gl);
+        gl.tick(renderOpts);
+
+        canvas.remove();
+        reset(gl);
+        var ext = gl.getExtension("WEBGL_lose_context");
+        ext.loseContext();
+    },
+    {
+        "async": true,
+        "maxTime": 1
+
+    })
+    // add listeners
+    .on("cycle", function(event) {
+        console.log(event);
         results.completed++;
         results.remaining--;
         cb(results);
     })
-    .on("complete", function() {
+    .on("complete", function(e) {
+        console.log(e);
         cb(results);
     })
-    .run();
+    .on("error", function(e) {
+        console.error("error", e.target.error);
+    })
+    .run({ 
+        "async": true,
+        "maxTime": 1 
+    });
 }
 
 
