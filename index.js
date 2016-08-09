@@ -14,6 +14,11 @@ module.exports.run = function(cb){
     var canvas = document.body.appendChild(document.createElement("canvas"));
     var gl = createHeadlessContext(width, height, shader.renderShader);
 
+    var results = { 
+        completed: 0,
+        remaining: 5
+    };
+
     // add tests
     suite.add("shader", function() {
         gl = createContext(canvas, shader.renderShader);
@@ -52,12 +57,13 @@ module.exports.run = function(cb){
         canvas.width  = 100;
         canvas.height = 100;
 
-        cb();
+        results.completed++;
+        results.remaining--;
+        cb(results);
     })
     .on("complete", function() {
-        console.log("Fastest is " + this.filter("fastest").map("name"));
+        cb(results);
     })
-    // run async
     .run();
 }
 
