@@ -72,11 +72,28 @@ describe("general", function() {
 		var height = 300;
 
 		var gl = createHeadlessContext(width, height, texture.renderTexture);
-		var renderOpts = texture.loadTexture(gl);
+		var renderOpts = texture.loadBaboonTexture(gl);
 
 		gl.tick(renderOpts);
 
 		bufferToFile(gl, width, height, __dirname + "/output/texture");
+		var ext = gl.getExtension("STACKGL_destroy_context");
+		ext.destroy();
+	});
+
+	it("generated texture", function() {
+		var width = 300;
+		var height = 300;
+		var textureOpts = {
+			width: 16,
+			height: 16
+		};
+		var gl = createHeadlessContext(width, height, texture.renderTexture);
+		var renderOpts = texture.loadTexture(gl, texture.generateTexture(textureOpts));
+
+		gl.tick(renderOpts);
+
+		bufferToFile(gl, width, height, __dirname + "/output/genTexture");
 		var ext = gl.getExtension("STACKGL_destroy_context");
 		ext.destroy();
 	});

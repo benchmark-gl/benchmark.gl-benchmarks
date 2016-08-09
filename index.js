@@ -14,7 +14,7 @@ module.exports.run = function(cb){
     var canvas = document.body.appendChild(document.createElement("canvas"));
     var gl = createHeadlessContext(width, height, shader.renderShader);
 
-    var results = { 
+    var results = {
         completed: 0,
         remaining: 5
     };
@@ -40,6 +40,14 @@ module.exports.run = function(cb){
         var renderOpts = texture.loadTexture(gl);
         gl.tick(renderOpts);
     })
+    .add("textureSizes", function() {
+        var maxSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);
+        console.log(maxSize);
+
+        gl = createContext(canvas, texture.renderTexture);
+        var renderOpts = texture.loadTexture(gl);
+        gl.tick(renderOpts);
+    })
     .add("frameBuffer", function() {
         gl = createContext(canvas, frameBuffer.renderFrameBuffer);
         var renderOpts = frameBuffer.loadFrameBuffer(gl);
@@ -51,7 +59,6 @@ module.exports.run = function(cb){
         canvas.remove();
         var ext = gl.getExtension("STACKGL_destroy_context");
         ext.destroy();
-
 
         canvas = document.body.appendChild(document.createElement("canvas"));
         canvas.width  = 100;
