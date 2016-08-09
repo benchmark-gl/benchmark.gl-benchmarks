@@ -4,7 +4,7 @@ var geometry = require("./benchmark/geometry.js");
 var shader = require("./benchmark/shader.js");
 var texture = require("./benchmark/texture.js");
 var vertexArray = require("./benchmark/vertexArray.js");
-var reset = require('gl-reset')
+var reset = require("gl-reset")
 
 var Benchmark = require("benchmark");
 
@@ -44,7 +44,7 @@ module.exports.run = function(cb){
     .on("cycle", function(event) {
 
         canvas.remove();
-        var ext = gl.getExtension('STACKGL_destroy_context');
+        var ext = gl.getExtension("STACKGL_destroy_context");
         ext.destroy();
 
 
@@ -55,7 +55,7 @@ module.exports.run = function(cb){
         cb();
     })
     .on("complete", function() {
-        console.log('Fastest is ' + this.filter('fastest').map('name'));
+        console.log("Fastest is " + this.filter("fastest").map("name"));
     })
     // run async
     .run();
@@ -71,9 +71,9 @@ function createContext(canvas, opts, render) {
     }
 
     var gl = (
-        canvas.getContext('webgl', opts) ||
-        canvas.getContext('webgl-experimental', opts) ||
-        canvas.getContext('experimental-webgl', opts)
+        canvas.getContext("webgl", opts) ||
+        canvas.getContext("webgl-experimental", opts) ||
+        canvas.getContext("experimental-webgl", opts)
     );
 
     if (!gl) {

@@ -21,7 +21,7 @@ describe("general", function() {
 		gl.should.exist;
 
 		bufferToFile(gl, width, height, __dirname + "/output/context");
-		var ext = gl.getExtension('STACKGL_destroy_context');
+		var ext = gl.getExtension("STACKGL_destroy_context");
 		ext.destroy();
 	});
 	
@@ -35,7 +35,7 @@ describe("general", function() {
 		gl.tick(renderOpts);
 
 		bufferToFile(gl, width, height, __dirname + "/output/shader");
-		var ext = gl.getExtension('STACKGL_destroy_context');
+		var ext = gl.getExtension("STACKGL_destroy_context");
 		ext.destroy();
 	});
 	
@@ -49,7 +49,7 @@ describe("general", function() {
 		gl.tick(renderOpts);
 
 		bufferToFile(gl, width, height, __dirname + "/output/geometry");
-		var ext = gl.getExtension('STACKGL_destroy_context');
+		var ext = gl.getExtension("STACKGL_destroy_context");
 		ext.destroy();
 	});	
 
@@ -63,7 +63,7 @@ describe("general", function() {
 		gl.tick(renderOpts);
 
 		bufferToFile(gl, width, height, __dirname + "/output/vertexArray");
-		var ext = gl.getExtension('STACKGL_destroy_context');
+		var ext = gl.getExtension("STACKGL_destroy_context");
 		ext.destroy();
 	});
 
@@ -77,7 +77,7 @@ describe("general", function() {
 		gl.tick(renderOpts);
 
 		bufferToFile(gl, width, height, __dirname + "/output/texture");
-		var ext = gl.getExtension('STACKGL_destroy_context');
+		var ext = gl.getExtension("STACKGL_destroy_context");
 		ext.destroy();
 	});
 
@@ -91,7 +91,7 @@ describe("general", function() {
 		gl.tick(renderOpts, frameBuffer.tickFrameBuffer);
 
 		bufferToFile(gl, width, height, __dirname + "/output/frameBuffer");
-		var ext = gl.getExtension('STACKGL_destroy_context');
+		var ext = gl.getExtension("STACKGL_destroy_context");
 		ext.destroy();
 	});
 });
@@ -131,8 +131,8 @@ function bufferToFile (gl, width, height, filename) {
 	// Write output
 	var pixels = new Uint8Array(width * height * 4);
 	gl.readPixels(0, 0, width, height, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
-	file.write(['P3\n# gl.ppm\n', width, ' ', height, '\n255\n'].join(''));
+	file.write(["P3\n# gl.ppm\n", width, " ", height, "\n255\n"].join(""));
 	for (var i = 0; i < pixels.length; i += 4) {
-		file.write(pixels[i] + ' ' + pixels[i + 1] + ' ' + pixels[i + 2] + ' ');
+		file.write(pixels[i] + " " + pixels[i + 1] + " " + pixels[i + 2] + " ");
 	}
 }
