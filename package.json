@@ -21,6 +21,7 @@
   ],
   "files": [
     "benchmark/*",
+    "gpuReport.js",
     "index.js"
   ],
   "license": "MIT",

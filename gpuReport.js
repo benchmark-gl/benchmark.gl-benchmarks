@@ -1,5 +1,5 @@
 module.exports.collectGPUInfo = function() {
-    var webglVersion = window.location.search.indexOf('v=2') > 0 ? 2 : 1;
+    var webglVersion = window.location.search.indexOf("v=2") > 0 ? 2 : 1;
     var report = {
         platform: navigator.platform,
         userAgent: navigator.userAgent,
@@ -15,7 +15,7 @@ module.exports.collectGPUInfo = function() {
 
     var canvas = document.body.appendChild(document.createElement("canvas"));
     var gl, contextName;
-    var possibleNames = (webglVersion === 2) ? ['webgl2', 'experimental-webgl2'] : ['webgl', 'experimental-webgl'];
+    var possibleNames = (webglVersion === 2) ? ["webgl2", "experimental-webgl2"] : ["webgl", "experimental-webgl"];
     possibleNames.forEach(function (name) {
         gl = canvas.getContext(name, { stencil: true });
         if (gl){
@@ -37,7 +37,7 @@ module.exports.collectGPUInfo = function() {
         renderer: gl.getParameter(gl.RENDERER),
         unMaskedVendor: getUnmaskedInfo(gl).vendor,
         unMaskedRenderer: getUnmaskedInfo(gl).renderer,
-        antialias:  gl.getContextAttributes().antialias ? 'Available' : 'Not available',
+        antialias:  gl.getContextAttributes().antialias ? "Available" : "Not available",
         angle: getAngle(gl),
         majorPerformanceCaveat: getMajorPerformanceCaveat(contextName),
         maxColorBuffers: getMaxColorBuffers(gl),
@@ -68,12 +68,12 @@ module.exports.collectGPUInfo = function() {
     });
 }
 function describeRange(value) {
-    return '[' + value[0] + ', ' + value[1] + ']';
+    return "[" + value[0] + ", " + value[1] + "]";
 }
 function getUnmaskedInfo(gl) {
     var unMaskedInfo = {
-        renderer: '',
-        vendor: ''
+        renderer: "",
+        vendor: ""
     };
     
     var dbgRenderInfo = gl.getExtension("WEBGL_debug_renderer_info");
@@ -102,15 +102,15 @@ function getMajorPerformanceCaveat(contextName) {
 
     if (!gl) {
         // Our original context creation passed.  This did not.
-        return 'Yes';
+        return "Yes";
     }
 
-    if (typeof gl.getContextAttributes().failIfMajorPerformanceCaveat === 'undefined') {
-        // If getContextAttributes() doesn't include the failIfMajorPerformanceCaveat
-        // property, assume the browser doesn't implement it yet.
-        return 'Not implemented';
+    if (typeof gl.getContextAttributes().failIfMajorPerformanceCaveat === "undefined") {
+        // If getContextAttributes() doesn"t include the failIfMajorPerformanceCaveat
+        // property, assume the browser doesn"t implement it yet.
+        return "Not implemented";
     }
-    return 'No';
+    return "No";
 }
 
 function isPowerOfTwo(n) {
@@ -121,8 +121,8 @@ function getAngle(gl) {
     var lineWidthRange = describeRange(gl.getParameter(gl.ALIASED_LINE_WIDTH_RANGE));
 
     // Heuristic: ANGLE is only on Windows, not in IE, and does not implement line width greater than one.
-    var angle = ((navigator.platform === 'Win32') || (navigator.platform === 'Win64')) &&
-        (gl.getParameter(gl.RENDERER) !== 'Internet Explorer') &&
+    var angle = ((navigator.platform === "Win32") || (navigator.platform === "Win64")) &&
+        (gl.getParameter(gl.RENDERER) !== "Internet Explorer") &&
         (lineWidthRange === describeRange([1,1]));
 
     if (angle) {
@@ -132,19 +132,19 @@ function getAngle(gl) {
         // We could also test for WEBGL_draw_buffers, but many systems do not have it yet
         // due to driver bugs, etc.
         if (isPowerOfTwo(gl.getParameter(gl.MAX_VERTEX_UNIFORM_VECTORS)) && isPowerOfTwo(gl.getParameter(gl.MAX_FRAGMENT_UNIFORM_VECTORS))) {
-            return 'Yes, D3D11';
+            return "Yes, D3D11";
         } else {
-            return 'Yes, D3D9';
+            return "Yes, D3D9";
         }
     }
 
-    return 'No';
+    return "No";
 }
 
 function getMaxAnisotropy(gl) {
-    var e = gl.getExtension('EXT_texture_filter_anisotropic')
-            || gl.getExtension('WEBKIT_EXT_texture_filter_anisotropic')
-            || gl.getExtension('MOZ_EXT_texture_filter_anisotropic');
+    var e = gl.getExtension("EXT_texture_filter_anisotropic")
+            || gl.getExtension("WEBKIT_EXT_texture_filter_anisotropic")
+            || gl.getExtension("MOZ_EXT_texture_filter_anisotropic");
 
     if (e) {
         var max = gl.getParameter(e.MAX_TEXTURE_MAX_ANISOTROPY_EXT);
@@ -154,20 +154,20 @@ function getMaxAnisotropy(gl) {
         }
         return max;
     }
-    return 'n/a';
+    return "n/a";
 }
 
 function formatPower(exponent, verbose) {
     if (verbose) {
-        return '' + Math.pow(2, exponent);
+        return "" + Math.pow(2, exponent);
     } else {
-        return '2^' + exponent + '';
+        return "2^" + exponent + "";
     }
 }
 
 function getPrecisionDescription(precision, verbose) {
-    var verbosePart = verbose ? ' bit mantissa' : '';
-    return '[-' + formatPower(precision.rangeMin, verbose) + ', ' + formatPower(precision.rangeMax, verbose) + '] (' + precision.precision + verbosePart + ')'
+    var verbosePart = verbose ? " bit mantissa" : "";
+    return "[-" + formatPower(precision.rangeMin, verbose) + ", " + formatPower(precision.rangeMax, verbose) + "] (" + precision.precision + verbosePart + ")"
 }
 
 function getBestFloatPrecision(shaderType, gl) {
@@ -190,10 +190,10 @@ function getBestFloatPrecision(shaderType, gl) {
 
 function getFloatIntPrecision(gl) {
     var high = gl.getShaderPrecisionFormat(gl.FRAGMENT_SHADER, gl.HIGH_FLOAT);
-    var s = (high.precision !== 0) ? 'highp/' : 'mediump/';
+    var s = (high.precision !== 0) ? "highp/" : "mediump/";
 
     high = gl.getShaderPrecisionFormat(gl.FRAGMENT_SHADER, gl.HIGH_INT);
-    s += (high.rangeMax !== 0) ? 'highp' : 'lowp';
+    s += (high.rangeMax !== 0) ? "highp" : "lowp";
 
     return s;
 }
