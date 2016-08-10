@@ -85,8 +85,8 @@ describe("general", function() {
 		var width = 300;
 		var height = 300;
 		var textureOpts = {
-			width: 16,
-			height: 16
+			width: 1024,
+			height: 1024
 		};
 		var gl = createHeadlessContext(width, height, texture.renderTexture);
 		var renderOpts = texture.loadTexture(gl, texture.generateTexture(textureOpts));
