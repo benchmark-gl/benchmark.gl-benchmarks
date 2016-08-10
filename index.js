@@ -13,14 +13,16 @@ module.exports.run = function(cb){
     var suite = new Benchmark.Suite;
 
     var results = {
-        report: gpuReport.collectGPUInfo(),
+        gpu: gpuReport.collectGPUInfo(),
         completed: 0,
-        remaining: 6
+        remaining: 8,
+        benchmark: {},
+        platform: Benchmark.platform
     };
 
     var settings = {
-        "async": true,
-        "maxTime": 1
+        "async": false,
+        "maxTime": 1,
     };
 
     // add tests
@@ -75,7 +77,7 @@ module.exports.run = function(cb){
         gl = createContext(canvas, textureBench.renderTexture);
 
         size = 8;
-        while (size < 512){
+        while (size < 1024){
             var textureOpts = {
                 width: size,
                 height: size
@@ -117,23 +119,20 @@ module.exports.run = function(cb){
         teardown(canvas, gl);
     }, settings)
     // add listeners
-    .on("cycle", function(event) {
-        console.log(event);
+    .on("cycle", function(e) {
         results.completed++;
         results.remaining--;
+        results.benchmarks = e.target;
         cb(results);
     })
     .on("complete", function(e) {
-        console.log(e);
+        results.benchmarks = e.target;
         cb(results);
     })
     .on("error", function(e) {
         console.error("error", e.target.error);
     })
-    .run({ 
-        "async": true,
-        "maxTime": 1 
-    });
+    .run(settings);
 }
 
 function setup(){
