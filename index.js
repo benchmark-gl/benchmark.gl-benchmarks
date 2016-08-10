@@ -13,16 +13,15 @@ module.exports.run = function(cb){
     var suite = new Benchmark.Suite;
 
     var results = {
-        gpu: gpuReport.collectGPUInfo(),
         completedBenchmarks: 0,
         remainingBenchmarks: 7,
+        gpu: gpuReport.collectGPUInfo(),
         benchmarks: [],
         platform: Benchmark.platform
     };
 
     var settings = {
         "async": false,
-        "maxTime": 0.5,
         "onStart": function(e) {
             e.currentTarget.canvas = document.createElement("canvas");
             e.currentTarget.canvas.width  = 100;
@@ -94,7 +93,15 @@ module.exports.run = function(cb){
     .on("cycle", function(e) {
         results.completedBenchmarks++;
         results.remainingBenchmarks--;
-        results.benchmarks.push(e.target);
+        var result = {
+            name: e.target.name,
+            stats: e.target.stats,
+            times: e.target.times,
+            hz: e.target.hz,
+            cycles: e.target.cycles,
+            count: e.target.count
+        }
+        results.benchmarks.push(result);
         cb(results);
     })
     .on("error", function(e) {
@@ -102,7 +109,7 @@ module.exports.run = function(cb){
     })
     .run({
         "async": false,
-        "maxTime": 2,
+        "maxTime": 3,
     });
 }
 
