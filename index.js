@@ -22,7 +22,7 @@ module.exports.run = function(cb){
 
     var settings = {
         "async": false,
-        "maxTime": 1,
+        "maxTime": 2,
     };
 
     // add tests
