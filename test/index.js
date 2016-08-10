@@ -38,6 +38,19 @@ describe("general", function() {
 		var ext = gl.getExtension("STACKGL_destroy_context");
 		ext.destroy();
 	});
+
+	it("raymarch shader", function() {
+		var width = 300;
+		var height = 300;
+
+		var gl = createHeadlessContext(width, height, shader.renderShaderRayMarch);
+		var renderOpts = shader.loadShaderRayMarch(gl);
+		gl.tick(renderOpts);
+
+		bufferToFile(gl, width, height, __dirname + "/output/raymarchShader");
+		var ext = gl.getExtension("STACKGL_destroy_context");
+		ext.destroy();
+	});
 	
 	it("geometry", function() {
 		var width = 100;
@@ -85,8 +98,8 @@ describe("general", function() {
 		var width = 300;
 		var height = 300;
 		var textureOpts = {
-			width: 1024,
-			height: 1024
+			width: 64,
+			height: 64
 		};
 		var gl = createHeadlessContext(width, height, texture.renderTexture);
 		var renderOpts = texture.loadTexture(gl, texture.generateTexture(textureOpts));

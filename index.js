@@ -33,6 +33,15 @@ module.exports.run = function(cb){
 
         teardown(canvas, gl);
     }, settings)
+    suite.add("shaderRayMarch", function() {
+        var canvas = setup();
+
+        var gl = createContext(canvas, shaderBench.renderShaderRayMarch);
+        var renderOpts = shaderBench.loadShaderRayMarch(gl);
+        gl.tick(renderOpts);
+
+        teardown(canvas, gl);
+    }, settings)
     .add("geometry", function() {
         var canvas = setup();
 
@@ -60,7 +69,26 @@ module.exports.run = function(cb){
 
         teardown(canvas, gl);
     }, settings)
-    .add("textureSizes", function() {
+    .add("loadTextureSizes", function() {
+        var canvas = setup();
+
+        gl = createContext(canvas, textureBench.renderTexture);
+
+        size = 8;
+        while (size < 512){
+            var textureOpts = {
+                width: size,
+                height: size
+            };
+
+            var renderOpts = textureBench.loadTexture(gl, textureBench.generateTexture(textureOpts));
+            gl.tick(renderOpts);
+            size *= 2;
+        }
+
+        teardown(canvas, gl);
+    }, settings)
+    .add("getData", function() {
         var canvas = setup();
 
         gl = createContext(canvas, textureBench.renderTexture);

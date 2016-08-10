@@ -1,6 +1,8 @@
 var createShader = require("gl-shader");
 var fillScreen = require("a-big-triangle");
+var raymarchShader = require("../shader/raymarchShader.js");
 var glMatrix = require("gl-matrix");
+var createBuffer = require("gl-buffer");
 
 module.exports.loadShader = function(gl){
     var shader = createShader(gl,
@@ -30,11 +32,11 @@ module.exports.loadShader = function(gl){
         0, -1, 0,
         1, 1, 0
     ]), gl.STATIC_DRAW);
-    var options = {
+
+    return {
         buffer: buffer,
         shader: shader
-    };
-    return Object.assign({}, options); 
+    };; 
 }
 
 module.exports.renderShader = function(gl, opts){
@@ -46,9 +48,39 @@ module.exports.renderShader = function(gl, opts){
     shader.attributes.position.pointer();
     shader.attributes.color = [1, 0, 1];
 
-    //Set uniforms
     shader.uniforms.tp = [Math.cos(0.001 * Date.now()), Math.sin(0.001 * Date.now()), 0];
     shader.uniforms.matrix = glMatrix.mat4.create();
+
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+}
+
+module.exports.loadShaderRayMarch = function(gl){
+    var shader = createShader(
+        gl,
+        raymarchShader.vert,
+        raymarchShader.frag
+    );
+    shader.attributes.position.location = 0;
+
+    //Create vertex buffer;
+    buffer = createBuffer(gl, [-1, -1, -1, 4, 4, -1]);
+
+    return {
+        buffer: buffer,
+        shader: shader
+    }; 
+}
+
+module.exports.renderShaderRayMarch = function(gl, opts){
+    var shader = opts.shader;
+    var buffer = opts.buffer;
+
+    shader.bind();
+    buffer.bind();
+
+    shader.attributes.position.pointer();
+
+    shader.uniforms.uResolution = [gl.drawingBufferWidth, gl.drawingBufferHeight];
 
     //Draw
     gl.drawArrays(gl.TRIANGLES, 0, 3);
