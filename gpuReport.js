@@ -67,9 +67,11 @@ module.exports.collectGPUInfo = function() {
         extensions: gl.getSupportedExtensions()
     });
 }
+
 function describeRange(value) {
-    return "[" + value[0] + ", " + value[1] + "]";
+    return [value[0], value[1]];
 }
+
 function getUnmaskedInfo(gl) {
     var unMaskedInfo = {
         renderer: "",

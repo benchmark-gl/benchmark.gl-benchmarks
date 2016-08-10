@@ -21,8 +21,8 @@ benchmarks.run(function(res){
 ### Output Example
 ```json
 {
-  "completed": 1,
-  "remaining": 0,
+  "completedBenchmarks": 1,
+  "remainingBenchmarks": 0,
   "gpu": {
     "platform": "MacIntel",
     "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36",
@@ -54,9 +54,18 @@ benchmarks.run(function(res){
     "maxVertexAttributes": 16,
     "maxVertexTextureImageUnits": 16,
     "maxVertexUniformVectors": 1024,
-    "aliasedLineWidthRange": "[1, 7]",
-    "aliasedPointSizeRange": "[1, 255]",
-    "maxViewportDimensions": "[16384, 16384]",
+    "aliasedLineWidthRange": [
+      1,
+      7
+    ],
+    "aliasedPointSizeRange": [
+      1,
+      255
+    ],
+    "maxViewportDimensions": [
+      16384,
+      16384
+    ],
     "maxAnisotropy": 16,
     "vertexShaderBestPrecision": {
       "high": "[-1.7014118346046923e+38, 1.7014118346046923e+38] (23 bit mantissa)",
@@ -98,7 +107,7 @@ benchmarks.run(function(res){
       "WEBKIT_WEBGL_lose_context"
     ]
   },
-  "benchmark": [
+  "benchmarks": [
     {
       "name": "shader",
       "options": {
@@ -119,38 +128,46 @@ benchmarks.run(function(res){
       "minTime": 0.075,
       "id": 1,
       "stats": {
-        "moe": 0.006271313431732119,
-        "rme": 10.089984481747223,
-        "sem": 0.0028780694959761907,
-        "deviation": 0.010377027142090954,
-        "mean": 0.06215384615384615,
+        "moe": 0.0008160582473764424,
+        "rme": 4.486184082435939,
+        "sem": 0.0003912072135074029,
+        "deviation": 0.0017927366683104246,
+        "mean": 0.018190476190476194,
         "sample": [
-          0.054,
-          0.056,
-          0.068,
-          0.0485,
-          0.0505,
-          0.0695,
-          0.068,
-          0.079,
-          0.051,
-          0.0535,
-          0.0655,
-          0.077,
-          0.0675
+          0.0184,
+          0.017599999999999998,
+          0.0186,
+          0.022600000000000002,
+          0.022,
+          0.0196,
+          0.019,
+          0.0158,
+          0.0166,
+          0.0184,
+          0.016800000000000002,
+          0.0182,
+          0.017599999999999998,
+          0.0164,
+          0.0194,
+          0.0166,
+          0.0198,
+          0.0164,
+          0.0182,
+          0.0164,
+          0.017599999999999998
         ],
-        "variance": 0.00010768269230769234
+        "variance": 0.0000032139047619047613
       },
       "times": {
-        "cycle": 0.1243076923076923,
-        "elapsed": 3.444,
-        "period": 0.06215384615384615,
-        "timeStamp": 1470855660979
+        "cycle": 0.09095238095238098,
+        "elapsed": 2.858,
+        "period": 0.018190476190476194,
+        "timeStamp": 1470857076591
       },
       "running": false,
-      "count": 2,
-      "cycles": 2,
-      "hz": 16.089108910891092
+      "count": 5,
+      "cycles": 3,
+      "hz": 54.97382198952879
     }
   ],
   "platform": {

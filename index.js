@@ -14,9 +14,9 @@ module.exports.run = function(cb){
 
     var results = {
         gpu: gpuReport.collectGPUInfo(),
-        completed: 0,
-        remaining: 8,
-        benchmark: [],
+        completedBenchmarks: 0,
+        remainingBenchmarks: 8,
+        benchmarks: [],
         platform: Benchmark.platform
     };
 
@@ -120,9 +120,9 @@ module.exports.run = function(cb){
     }, settings)
     // add listeners
     .on("cycle", function(e) {
-        results.completed++;
-        results.remaining--;
-        results.benchmark.push(e.target);
+        results.completedBenchmarks++;
+        results.remainingBenchmarks--;
+        results.benchmarks.push(e.target);
         cb(results);
     })
     .on("error", function(e) {
