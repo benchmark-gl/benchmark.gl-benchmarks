@@ -21,6 +21,7 @@
   ],
   "files": [
     "benchmark/*",
+    "shader/*",
     "gpuReport.js",
     "index.js"
   ],
