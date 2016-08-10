@@ -1,6 +1,6 @@
 {
   "name": "benchmark.gl-benchmarks",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "benchmarks used for generating benchmark.gl calibration library",
   "keywords": [
     "webgl",
