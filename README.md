@@ -4,12 +4,12 @@ profiles and tests gpu performance
 
 uses [benchmark.js](https://benchmarkjs.com/) and [stack.gl](http://stack.gl/)
 
-## installation
+## Installation
 ```javascript
 npm install benchmark.gl-benchmarks
 ```
 
-## usage
+## Usage
 ```javascript
 var benchmarks = require("benchmark.gl-benchmarks");
 
@@ -18,11 +18,11 @@ benchmarks.run(function(res){
 });
 
 ```
-### output eample
+### Output Example
 ```json
 {
-  "completed": 8, //tests completed
-  "remaining": 0, //tests remaining
+  "completed": 1,
+  "remaining": 0,
   "gpu": {
     "platform": "MacIntel",
     "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36",
@@ -98,7 +98,61 @@ benchmarks.run(function(res){
       "WEBKIT_WEBGL_lose_context"
     ]
   },
-  "benchmark": [...], //list of benchmark.js benchmark objects
+  "benchmark": [
+    {
+      "name": "shader",
+      "options": {
+        "async": false,
+        "defer": false,
+        "delay": 0.005,
+        "initCount": 1,
+        "maxTime": 2,
+        "minSamples": 5,
+        "minTime": 0.075
+      },
+      "async": false,
+      "defer": false,
+      "delay": 0.005,
+      "initCount": 1,
+      "maxTime": 2,
+      "minSamples": 5,
+      "minTime": 0.075,
+      "id": 1,
+      "stats": {
+        "moe": 0.006271313431732119,
+        "rme": 10.089984481747223,
+        "sem": 0.0028780694959761907,
+        "deviation": 0.010377027142090954,
+        "mean": 0.06215384615384615,
+        "sample": [
+          0.054,
+          0.056,
+          0.068,
+          0.0485,
+          0.0505,
+          0.0695,
+          0.068,
+          0.079,
+          0.051,
+          0.0535,
+          0.0655,
+          0.077,
+          0.0675
+        ],
+        "variance": 0.00010768269230769234
+      },
+      "times": {
+        "cycle": 0.1243076923076923,
+        "elapsed": 3.444,
+        "period": 0.06215384615384615,
+        "timeStamp": 1470855660979
+      },
+      "running": false,
+      "count": 2,
+      "cycles": 2,
+      "hz": 16.089108910891092
+    }
+  ],
   "platform": {
     "description": "Chrome 52.0.2743.116 on OS X 10.11.6",
     "layout": "Blink",
@@ -117,7 +171,7 @@ benchmarks.run(function(res){
 }
 ```
 
-## testing
+## Testing
 ```javascript
 npm run test
 ```
