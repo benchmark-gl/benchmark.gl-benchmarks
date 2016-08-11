@@ -1,8 +1,9 @@
 var createFBO = require("gl-fbo");
 var createShader = require("gl-shader");
-var fillScreen = require("a-big-triangle");
 var ndarray = require("ndarray");
 var fill = require("ndarray-fill");
+var createBuffer = require("gl-buffer");
+var createVAO    = require("gl-vao");
 
 module.exports.loadFrameBuffer = function(gl){
     gl.disable(gl.DEPTH_TEST);
@@ -86,14 +87,34 @@ module.exports.tickFrameBuffer = function(gl, opts){
     opts.updateShader.bind();
     opts.updateShader.uniforms.buffer = prevState.color[0].bind();
     opts.updateShader.uniforms.dims = prevState.shape;
-    fillScreen(gl)
+
+    var buf = createBuffer(gl, new Float32Array([-1, -1, -1, 4, 4, -1]));
+    triangleVAO = createVAO(gl, [
+      { buffer: buf,
+        type: gl.FLOAT,
+        size: 2
+      }
+    ]);
+    triangleVAO.bind();
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+    triangleVAO.unbind();
 
     return opts; 
 }
 
 module.exports.renderFrameBuffer = function(gl, opts){
     //Render contents of buffer to screen
-    opts.drawShader.bind()
-    opts.drawShader.uniforms.buffer = opts.state[opts.currentFrame].color[0].bind()
-    fillScreen(gl)
+    opts.drawShader.bind();
+    opts.drawShader.uniforms.buffer = opts.state[opts.currentFrame].color[0].bind();
+
+    var buf = createBuffer(gl, new Float32Array([-1, -1, -1, 4, 4, -1]));
+    triangleVAO = createVAO(gl, [
+      { buffer: buf,
+        type: gl.FLOAT,
+        size: 2
+      }
+    ]);
+    triangleVAO.bind();
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+    triangleVAO.unbind();
 }

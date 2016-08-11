@@ -6,70 +6,168 @@ global.textureBench = require("./benchmark/texture.js");
 global.vertexArrayBench = require("./benchmark/vertexArray.js");
 global.resetGL = require("gl-reset");
 global.Benchmark = require("benchmark");
-var gpuReport = require("./gpuReport.js");
 
+var gpuReport = require("./gpuReport.js");
 
 module.exports.run = function(cb){
     var suite = new Benchmark.Suite;
 
     var results = {
         completedBenchmarks: 0,
-        remainingBenchmarks: 7,
+        remainingBenchmarks: 13,
         gpu: gpuReport.collectGPUInfo(),
         benchmarks: [],
         platform: Benchmark.platform
     };
 
     var settings = {
-        "async": false,
-        "onStart": function(e) {
-            e.currentTarget.canvas = document.createElement("canvas");
-            e.currentTarget.canvas.width  = 100;
-            e.currentTarget.canvas.height = 100;
+        async: false,
+        maxTime: 1,
+        onStart: function(e) {
+            e.currentTarget.canvas = setup();
         },
-        "onCycle": function(e) {
-            e.currentTarget.canvas.remove();
-            resetGL(e.currentTarget.gl);
-            var ext = e.currentTarget.gl.getExtension("WEBGL_lose_context");
-            ext.loseContext();
-            e.currentTarget.canvas = document.createElement("canvas");
-            e.currentTarget.canvas.width  = 100;
-            e.currentTarget.canvas.height = 100;
+        onCycle: function(e) {
+            teardown(e.currentTarget.canvas, e.currentTarget.gl);
+            e.currentTarget.canvas = setup();
         }
     };
 
-    // add tests
-    suite.add("shader", function() {
+    //Shader
+    suite.add("shader-init", function() {
         this.gl = createContext(this.canvas, shaderBench.renderShader);
         var renderOpts = shaderBench.loadShader(this.gl);
         this.gl.tick(renderOpts);
 
-    }, settings)
-    suite.add("shaderRayMarch", function() {
+    }, settings);
+    suite.add("shader-render", function() {
+        this.gl.tick(this.renderOpts);
+    }, {
+        async: false,
+        maxTime: 2,
+        onStart: function(e) {
+            e.currentTarget.canvas = setup();
+            e.currentTarget.gl = createContext(e.currentTarget.canvas, shaderBench.renderShader);
+            e.currentTarget.renderOpts = shaderBench.loadShader(e.currentTarget.gl);
+        },
+        onComplete: function(e){
+            teardown(e.currentTarget.canvas, e.currentTarget.gl);
+        }
+    });
+
+    // Shader-RayMarch
+    suite.add("shaderRayMarch-init", function() {
         this.gl = createContext(this.canvas, shaderBench.renderShaderRayMarch);
         var renderOpts = shaderBench.loadShaderRayMarch(this.gl);
         this.gl.tick(renderOpts);
 
-    }, settings)
-    .add("geometry", function() {
+    }, settings);
+    suite.add("shaderRayMarch-render", function() {
+        this.gl.tick(this.renderOpts);
+    }, {
+        async: false,
+        maxTime: 2,
+        onStart: function(e) {
+            e.currentTarget.canvas = setup();
+            e.currentTarget.gl = createContext(e.currentTarget.canvas, shaderBench.renderShaderRayMarch);
+            e.currentTarget.renderOpts = shaderBench.loadShaderRayMarch(e.currentTarget.gl);
+        },
+        onComplete: function(e){
+            teardown(e.currentTarget.canvas, e.currentTarget.gl);
+        }
+    });
+
+    //Geometry
+    suite.add("geometry-init", function() {
         this.gl = createContext(this.canvas, geometryBench.renderGeometry);
         var renderOpts = geometryBench.loadGeometry(this.gl, this.canvas.width, this.canvas.height);
         this.gl.tick(renderOpts);
 
-    }, settings)
-    .add("vertexArray", function() {
+    }, settings);
+    suite.add("geometry-render", function() {
+        this.gl.tick(this.renderOpts);
+    }, {
+        async: false,
+        maxTime: 2,
+        onStart: function(e) {
+            e.currentTarget.canvas = setup();
+            e.currentTarget.gl = createContext(e.currentTarget.canvas, geometryBench.renderGeometry);
+            e.currentTarget.renderOpts = geometryBench.loadGeometry(
+                e.currentTarget.gl, 
+                e.currentTarget.canvas.width, 
+                e.currentTarget.canvas.height);
+        },
+        onComplete: function(e){
+            teardown(e.currentTarget.canvas, e.currentTarget.gl);
+        }
+    });
+
+    //Vertex Array
+    suite.add("vertexArray-init", function() {
         this.gl = createContext(this.canvas, vertexArrayBench.renderVertexArray);
         var renderOpts = vertexArrayBench.loadVertexArray(this.gl);
         this.gl.tick(renderOpts);
 
-    }, settings)
-    .add("texture", function() {
+    }, settings);
+    suite.add("vertexArray-render", function() {
+        this.gl.tick(this.renderOpts);
+    }, {
+        async: false,
+        maxTime: 2,
+        onStart: function(e) {
+            e.currentTarget.canvas = setup();
+            e.currentTarget.gl = createContext(e.currentTarget.canvas, vertexArrayBench.renderVertexArray);
+            e.currentTarget.renderOpts = vertexArrayBench.loadVertexArray(e.currentTarget.gl);
+        },
+        onComplete: function(e){
+            teardown(e.currentTarget.canvas, e.currentTarget.gl);
+        }
+    });
+
+    //Texture
+    suite.add("texture-init", function() {
         this.gl = createContext(this.canvas, textureBench.renderTexture);
         var renderOpts = textureBench.loadBaboonTexture(this.gl);
         this.gl.tick(renderOpts);
 
-    }, settings)
-    .add("loadTextureSizes", function() {
+    }, settings);
+    suite.add("texture-render", function() {
+        this.gl.tick(this.renderOpts);
+    }, {
+        async: false,
+        maxTime: 2,
+        onStart: function(e) {
+            e.currentTarget.canvas = setup();
+            e.currentTarget.gl = createContext(e.currentTarget.canvas, textureBench.renderTexture);
+            e.currentTarget.renderOpts = textureBench.loadBaboonTexture(e.currentTarget.gl);
+        },
+        onComplete: function(e){
+            teardown(e.currentTarget.canvas, e.currentTarget.gl);
+        }
+    });
+
+    //FrameBuffer
+    suite.add("frameBuffer-init", function() {
+        this.gl = createContext(this.canvas, frameBufferBench.renderFrameBuffer);
+        var renderOpts = frameBufferBench.loadFrameBuffer(this.gl);
+        this.gl.tick(renderOpts);
+    }, settings);
+    suite.add("frameBuffer-render", function() {
+        this.gl.tick(this.renderOpts);
+    }, {
+        async: false,
+        maxTime: 2,
+        onStart: function(e) {
+            e.currentTarget.canvas = setup();
+            e.currentTarget.gl = createContext(e.currentTarget.canvas, frameBufferBench.renderFrameBuffer);
+            e.currentTarget.renderOpts = frameBufferBench.loadFrameBuffer(e.currentTarget.gl);
+        },
+        onComplete: function(e){
+            teardown(e.currentTarget.canvas, e.currentTarget.gl);
+        }
+    });
+
+    // textureSizes
+    suite.add("loadTextureSizes", function() {
         this.gl = createContext(this.canvas, textureBench.renderTexture);
         var size = 8;
         while (size < 1024){
@@ -82,15 +180,9 @@ module.exports.run = function(cb){
             this.gl.tick(renderOpts);
             size *= 2;
         }
+    }, settings);
 
-    }, settings)
-    .add("frameBuffer", function() {
-        this.gl = createContext(this.canvas, frameBufferBench.renderFrameBuffer);
-        var renderOpts = frameBufferBench.loadFrameBuffer(this.gl);
-        this.gl.tick(renderOpts);
-
-    }, settings)
-    .on("cycle", function(e) {
+    suite.on("cycle", function(e) {
         results.completedBenchmarks++;
         results.remainingBenchmarks--;
         var result = {
@@ -103,21 +195,22 @@ module.exports.run = function(cb){
         }
         results.benchmarks.push(result);
         cb(results);
-    })
-    .on("error", function(e) {
+    });
+    suite.on("error", function(e) {
         console.error("error", e.target.error);
-    })
-    .run({
-        "async": false,
-        "maxTime": 3,
+    });
+    suite.run({
+        async: true,
+        maxTime: 2,
+        delay: 0.5,
     });
 }
 
-function setup(){
-    var canvas = document.body.appendChild(document.createElement("canvas"));
-    canvas.width  = 100;
-    canvas.height = 100;
-
+function setup(opts){
+    opts = opts || {};
+    var canvas = document.createElement("canvas");
+    canvas.width  = opts.width || 1;
+    canvas.height = opts.height || 1;
     return canvas;
 }
 
@@ -143,7 +236,7 @@ function createContext(canvas, opts, render) {
     );
 
     if (!gl) {
-        throw new Error("Unable to initialize headless-gl");
+        throw new Error("Unable to initialize gl");
     }
 
     if (render){

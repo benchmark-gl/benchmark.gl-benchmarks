@@ -1,5 +1,4 @@
 var createShader = require("gl-shader");
-var fillScreen = require("a-big-triangle");
 var raymarchShader = require("../shader/raymarchShader.js");
 var glMatrix = require("gl-matrix");
 var createBuffer = require("gl-buffer");
