@@ -4,10 +4,11 @@ global.geometryBench = require("./benchmark/geometry.js");
 global.shaderBench = require("./benchmark/shader.js");
 global.textureBench = require("./benchmark/texture.js");
 global.vertexArrayBench = require("./benchmark/vertexArray.js");
+global.textureGenerator = require("gl-simpleTextureGenerator");
 global.resetGL = require("gl-reset");
 global.Benchmark = require("benchmark");
 
-var gpuReport = require("./gpuReport.js");
+var gpuReport = require("gl-info");
 
 module.exports.run = function(cb){
     var suite = new Benchmark.Suite;
@@ -15,7 +16,7 @@ module.exports.run = function(cb){
     var results = {
         completedBenchmarks: 0,
         remainingBenchmarks: 13,
-        gpu: gpuReport.collectGPUInfo(),
+        gpu: gpuReport(),
         benchmarks: [],
         platform: Benchmark.platform
     };
@@ -176,7 +177,7 @@ module.exports.run = function(cb){
                 height: size
             };
 
-            var renderOpts = textureBench.loadTexture(this.gl, textureBench.generateTexture(textureOpts));
+            var renderOpts = textureBench.loadTexture(this.gl, textureGenerator(textureOpts));
             this.gl.tick(renderOpts);
             size *= 2;
         }

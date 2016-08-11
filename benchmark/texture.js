@@ -95,24 +95,3 @@ module.exports.renderTexture = function(gl, opts){
     gl.drawArrays(gl.TRIANGLES, 0, 3);
     triangleVAO.unbind();
 }
-
-module.exports.generateTexture = function(opts){
-    opts = opts || {};
-
-    var data = [];
-    var i, j, c;
-    var width = opts.width;
-    var height = opts.height;
-    var channels = 4;
-
-    for (i=0; i<height; i++) {
-        for (j=0; j<width; j++) {
-            c = ((i & 8) ^ (j & 8))*255;
-            data[(i*width+j)*channels] = c; // Red component
-            data[(i*width+j)*channels+1] = c; // Green component
-            data[(i*width+j)*channels+2] = c; // Blue component
-            data[(i*width+j)*channels+3] = 0xff; // Alpha component
-        }
-    }
-    return ndarray(new Uint8Array(data), [ width, height, channels ], [ channels, channels * width, 1 ], 0);
-}

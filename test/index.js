@@ -4,6 +4,7 @@ var geometry = require("../benchmark/geometry.js");
 var shader = require("../benchmark/shader.js");
 var texture = require("../benchmark/texture.js");
 var vertexArray = require("../benchmark/vertexArray.js");
+var textureGenerator = require("gl-simpleTextureGenerator");
 
 var glContext = require("gl");
 var fs = require("fs");
@@ -102,7 +103,7 @@ describe("general", function() {
 			height: 64
 		};
 		var gl = createHeadlessContext(width, height, texture.renderTexture);
-		var renderOpts = texture.loadTexture(gl, texture.generateTexture(textureOpts));
+		var renderOpts = texture.loadTexture(gl, textureGenerator(textureOpts));
 
 		gl.tick(renderOpts);
 
