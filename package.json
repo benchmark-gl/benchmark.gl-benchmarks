@@ -32,7 +32,7 @@
   "homepage": "https://github.com/socialtables/benchmark.gl#readme",
   "dependencies": {
     "baboon-image": "^2.0.0",
-    "benchmark": "^2.1.1",
+    "benchmark": "^2.1.2",
     "bunny": "^1.0.1",
     "face-normals": "0.0.0",
     "gl-buffer": "^2.1.2",
