@@ -31,7 +31,7 @@
   },
   "homepage": "https://github.com/socialtables/benchmark.gl#readme",
   "dependencies": {
-    "baboon-image": "^2.0.0",
+    "baboon-image": "^2.1.0",
     "benchmark": "^2.1.1",
     "bunny": "^1.0.1",
     "face-normals": "0.0.0",
